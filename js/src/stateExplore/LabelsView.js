@@ -18,9 +18,12 @@ FA.LabelsView = function( app ) {
 
         $dom = $('#layer-prison .labels');
 
+        // Append a label per each room
         for ( var i = 0; i < app.rooms.length; i++ ) {
             $dom.append( app.rooms[ i ].$label );
         }
+        // ... plus one for the white building report
+        $dom.append(app.whiteBuilding.$label);
 
         addListeners();
 
@@ -108,7 +111,7 @@ FA.LabelsView = function( app ) {
             var appOverLocation = app.getOverLocation(),
                 appActiveLocation = app.getActiveLocation();
 
-        // update all labels
+        // update all room labels
         for ( var i = 0, max = rooms.length; i < max; i++ ) {
 
             var room = rooms[ i ],
@@ -143,6 +146,26 @@ FA.LabelsView = function( app ) {
 
         }
 
+        // update white building labels
+        var whiteBuilding = app.whiteBuilding,
+            whiteBuildingSlug = whiteBuilding.getSlug(),
+            anchor = whiteBuilding.getCenter(),
+            screenCoord = toScreenXY( anchor, camera );
+
+        var targetScale = ( whiteBuildingSlug === appOverLocation || whiteBuildingSlug === appActiveLocation ) ? 1.11 : 1;
+        // ease
+        whiteBuilding.scale += ( targetScale - whiteBuilding.scale ) * 0.2;
+
+        var transform = 'translate3d(' + screenCoord.x  + 'px,'
+          + screenCoord.y + 'px,0px) scale(' + whiteBuilding.scale
+          + ',' + whiteBuilding.scale +')';
+
+        whiteBuilding.$label.css( {
+            'transform' : transform,
+            // opacity won't be affected by distance
+            'opacity' : .7,
+            'z-index' : 60,
+        } );
     }
 
 

@@ -21,6 +21,7 @@ FA.BuildingView = function( app ) {
         rooms,
         terrainMesh,
         roofEdgeHelper,
+        whiteBuildingMesh,
 
         controls,
 
@@ -40,6 +41,7 @@ FA.BuildingView = function( app ) {
         roofMesh = app.buildingRoofMesh;
         terrainMesh = app.terrainMesh;
         rooms = app.rooms;
+        whiteBuildingMesh = app.whiteBuilding.object3D;
 
         $dom = $('#layer-prison .gl');
 
@@ -67,9 +69,9 @@ FA.BuildingView = function( app ) {
         // camera.position.x = -17;
         // camera.position.y = 24.79;
         // camera.position.z = 14.97;
-        camera.position.x = -26;
-        camera.position.y = 16;
-        camera.position.z = 14;
+        camera.position.x = -5;
+        camera.position.y = 21.5;
+        camera.position.z = -42;
 
         renderer = new THREE.WebGLRenderer( { antialias: true } );
         renderer.setPixelRatio( window.devicePixelRatio );
@@ -94,12 +96,22 @@ FA.BuildingView = function( app ) {
         // building
         scene.add( buildingMesh );
 
+        // white building
+        scene.add( whiteBuildingMesh );
+
         // line helper (building)
         var edgeHelper = new THREE.EdgesHelper( buildingMesh, 0x000000, 80 );
         edgeHelper.material.transparent = true;
         edgeHelper.material.opacity = 0.3;
         edgeHelper.material.linewidth = 1;
         scene.add( edgeHelper );
+
+        // line helper (white building)
+        var whiteBuildingEdgeHelper = new THREE.EdgesHelper( whiteBuildingMesh, 0x000000, 80 );
+        whiteBuildingEdgeHelper.material.transparent = true;
+        whiteBuildingEdgeHelper.material.opacity = 0.3;
+        whiteBuildingEdgeHelper.material.linewidth = 1;
+        scene.add( whiteBuildingEdgeHelper );
 
         // roof
         var materials = roofMesh.material.materials;
@@ -151,7 +163,7 @@ FA.BuildingView = function( app ) {
         controls.minPolarAngle = 0.7;
         controls.enableKeys = false;
         controls.minDistance = 22;
-    	controls.maxDistance = 40;
+    	  controls.maxDistance = 70;
 
         if ( isTouchDevice ) {
             controls.rotateSpeed = 0.1;
@@ -208,6 +220,14 @@ FA.BuildingView = function( app ) {
             }
         }
 
+        if (location === 'whiteBuilding') {
+          app.whiteBuilding.$label.addClass( 'over' );
+          app.whiteBuilding.mark();
+        } else {
+          app.whiteBuilding.$label.removeClass( 'over' );
+          app.whiteBuilding.unmark();
+        }
+
     }
 
 
@@ -259,6 +279,20 @@ FA.BuildingView = function( app ) {
         } else {
             return null;
         }
+
+    }
+
+    this.getIntersectingWhiteBuilding = function( mouse ) {
+
+      raycaster.setFromCamera( mouse, camera );
+
+      var intersects = raycaster.intersectObjects( [whiteBuildingMesh] );
+
+      if ( intersects.length > 0 ) {
+        return intersects[ 0 ].object;
+      } else {
+        return null;
+      }
 
     }
 

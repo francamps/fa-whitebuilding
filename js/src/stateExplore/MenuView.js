@@ -74,6 +74,13 @@ FA.MenuView = function( app ) {
             '</li>';
         }
 
+        html += '<li data-location="' + 'whiteBuilding' + '" style="margin-top: 40px">' +
+            '<div class="folder external">' +
+            '<span class="icon-arrow-right"></span>' +
+            '<span>> Human slaughterhouse report (external)</span>' +
+            '</div>' +
+        '</li>';
+
         $menu.append( html );
 
         return $menu;
@@ -197,6 +204,10 @@ FA.MenuView = function( app ) {
 
         FA.Router.pushState( 'location', id );
 
+    }
+
+    function goToExternalLink( id ) {
+      window.open('https://www.amnesty.org');
     }
 
 
@@ -391,7 +402,12 @@ FA.MenuView = function( app ) {
             if ( navMode === 'location'  &&  numChildren === 0 ) {
                 var slug = $target.parent().data( 'location' );
 
-                goToLocation( slug );
+                if (slug === 'whiteBuilding') {
+                  app.setActiveLocation()
+                  goToExternalLink(slug);
+                } else {
+                  goToLocation( slug );
+                }
 
             }
 

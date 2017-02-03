@@ -82,8 +82,14 @@ FA.StateExplore = function( app ) {
 
             app.setOverLocation( roomUnderMouse );
 
+            var whiteBuildingUnderMouse = getWhiteBuildingUnderMouse( mouse );
+            if (whiteBuildingUnderMouse) {
+              app.setOverLocation( whiteBuildingUnderMouse );
+            }
+
+
             // change mouse cursor
-            if ( roomUnderMouse ) {
+            if ( roomUnderMouse || whiteBuildingUnderMouse ) {
                 $labels.css( 'cursor', 'pointer' );
             } else {
                 $labels.css( 'cursor', 'default' );
@@ -108,6 +114,19 @@ FA.StateExplore = function( app ) {
 
     }
 
+    function getWhiteBuildingUnderMouse( mouse ) {
+      if ( !labelUnderMouse ) {
+        var intersectingWhiteBuilding = buildingView.getIntersectingWhiteBuilding( mouse );
+        if ( intersectingWhiteBuilding ) {
+            return intersectingWhiteBuilding.name;
+        } else  {
+            return null;
+        }
+      } else {
+        return labelUnderMouse;
+      }
+    }
+
 
     function onMouseDown( e ) {
 
@@ -123,23 +142,28 @@ FA.StateExplore = function( app ) {
         isMouseDown = false;
 
         var roomOnUp = getRoomUnderMouse( mouse );
-        if ( roomOnUp === roomOnDown  &&  roomOnUp !== null ) {
+        var whiteBuildingUnderMouse = getWhiteBuildingUnderMouse( mouse );
+
+        if (roomOnUp === 'whiteBuilding' || whiteBuildingUnderMouse === 'whiteBuilding') {
+          window.open('https://www.amnesty.org', '_blank');
+        } else if ( roomOnUp === roomOnDown  &&  roomOnUp !== null ) {
             goToRoom( roomOnUp );
         }
-
         if (!roomOnUp) {
             app.setOverLocation( null );
         }
-
     }
 
 
     function goToRoom( slug ) {
 
+      if (slug === 'whiteBuilding') {
+        window.open('https://www.amnesty.org', '_blank');
+      } else {
         app.setActiveLocation( slug );
 
         FA.Router.pushState( 'location', slug );
-
+      }
     }
 
 

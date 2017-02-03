@@ -18,7 +18,7 @@ FA.StateExploreMobile = function( app ) {
 
         var url;
         if ( location.hostname === 'localhost' ) {
-            url = 'http://localhost:8888/saydnaya/data/data.json';
+            url = 'http://localhost:8888/data/data.json';
         } else {
             url = 'data/data.json';
         }

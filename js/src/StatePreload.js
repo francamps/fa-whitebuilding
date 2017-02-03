@@ -61,7 +61,7 @@ FA.StatePreload = function( app ) {
 
         var url;
         if ( location.hostname === 'localhost' ) {
-            url = 'http://localhost:8888/saydnaya/data/data.json';
+            url = 'http://localhost:8888/data/data.json';
         } else {
             url = 'data/data.json';
         }
@@ -118,6 +118,7 @@ FA.StatePreload = function( app ) {
         }
 
         loadBuildingModel();
+        loadWhiteBuildingModel();
         loadTerrain();
         loadRooms();
 
@@ -172,6 +173,29 @@ FA.StatePreload = function( app ) {
 
     }
 
+    function loadWhiteBuildingModel() {
+
+        // Main building model
+        var loader = new THREE.JSONLoader( manager );
+        loader.setTexturePath( 'obj/building/maps/' )
+        loader.load(
+            'obj/whiteBuilding/whiteBuilding.js',
+            function ( geometry, materials ) {
+                var material = new THREE.MeshPhongMaterial( {
+                    color : 0xffffff
+                } );
+                scaleGeometry( geometry );
+
+                var whiteBuildingMesh = new THREE.Mesh( geometry, material );
+                app.whiteBuilding = new FA.InteractiveItem( whiteBuildingMesh,
+                  'Human Slaughterhouse Report', 'whiteBuilding' );
+                app.whiteBuilding.setEmissiveDefault( 0x333333 );
+                app.whiteBuilding.unmark();
+            },
+            onProgress,
+            onError
+        );
+      }
 
     function loadRooms() {
 
