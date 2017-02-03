@@ -207,7 +207,7 @@ FA.MenuView = function( app ) {
     }
 
     function goToExternalLink( id ) {
-      window.open('https://www.amnesty.org');
+      window.open('https://www.amnesty.org', '_blank');
     }
 
 
@@ -403,7 +403,8 @@ FA.MenuView = function( app ) {
                 var slug = $target.parent().data( 'location' );
 
                 if (slug === 'whiteBuilding') {
-                  app.setActiveLocation()
+                  // setActiveLocation with no params unselects all locations
+                  app.setActiveLocation();
                   goToExternalLink(slug);
                 } else {
                   goToLocation( slug );
