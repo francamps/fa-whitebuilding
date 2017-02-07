@@ -207,7 +207,7 @@ FA.MenuView = function( app ) {
     }
 
     function goToExternalLink( id ) {
-      window.open('https://www.amnesty.org', '_blank');
+      window.open('https://www.amnesty.org/en/documents/mde24/5415/2017/en/', '_blank');
     }
 
 
